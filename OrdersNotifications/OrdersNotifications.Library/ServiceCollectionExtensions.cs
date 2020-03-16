@@ -1,5 +1,8 @@
+using System;
+using System.Net.NetworkInformation;
 using Microsoft.Extensions.DependencyInjection;
 using OrdersNotifications.Library.Queues;
+using OrdersNotifications.Library.Queues.Handlers;
 
 namespace OrdersNotifications.Library
 {
@@ -11,6 +14,16 @@ namespace OrdersNotifications.Library
             services.AddSingleton(new QueueConfig(connectionString));
             services.AddSingleton<ICloudQueueClientFactory, CloudQueueClientFactory>();
             services.AddTransient<IQueueCommunicator, QueueCommunicator>();
+            return services;
+        }
+
+        public static IServiceCollection AddAzureQueue(this IServiceCollection services,
+            string connectionString,
+            string notificationsApiHost)
+        {
+            services.AddAzureQueue(connectionString);
+            services.AddHttpClient<ISendEmailCommandHandler, SendEmailCommandHandler>(client 
+                => client.BaseAddress = new Uri(notificationsApiHost));
             return services;
         }
     }

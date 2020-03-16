@@ -40,7 +40,7 @@ namespace OrdersNotifications.Api
                 options.UseSqlite(connectionString);
             });
             
-            services.AddAzureQueue(Configuration["AzureStorageConnectionString"]);
+            services.AddAzureQueue(Configuration["AzureWebJobsStorage"]);
 
             services.Configure<EmailSettings>(options => Configuration
                 .GetSection("EmailSettings")
