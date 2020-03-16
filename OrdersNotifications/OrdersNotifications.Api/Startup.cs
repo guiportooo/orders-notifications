@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using OrdersNotifications.Api.Services;
 using OrdersNotifications.Library;
 
 namespace OrdersNotifications.Api
@@ -38,6 +39,14 @@ namespace OrdersNotifications.Api
                 var connectionString = $"DataSource={Path.Combine(rootDirectory, "DBs", "orders.db")}";
                 options.UseSqlite(connectionString);
             });
+            
+            services.AddAzureQueue(Configuration["AzureStorageConnectionString"]);
+
+            services.Configure<EmailSettings>(options => Configuration
+                .GetSection("EmailSettings")
+                .Bind(options));
+            
+            services.AddScoped<IOrdersService, OrdersService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -57,8 +66,6 @@ namespace OrdersNotifications.Api
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
-            
-            ordersContext.Database.Migrate();
         }
     }
 }

@@ -1,9 +1,7 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using OrdersNotifications.Api.Models;
-using OrdersNotifications.Library;
+using OrdersNotifications.Api.Services;
 
 namespace OrdersNotifications.Api.Controllers
 {
@@ -11,42 +9,33 @@ namespace OrdersNotifications.Api.Controllers
     [Route("[controller]")]
     public class OrdersController : ControllerBase
     {
-        private readonly OrdersContext _context;
+        private readonly IOrdersService _service;
 
-        public OrdersController(OrdersContext context)
-            => _context = context;
+        public OrdersController(IOrdersService service) => _service = service;
 
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var orders = await _context
-                .Orders
-                .Include(x => x.Items)
-                .ToListAsync();
-            var ordersCreated = orders.Select(x => new OrderCreated(x));
-            return Ok(ordersCreated);
+            var orders = await _service.GetAllOrders();
+            return Ok(orders);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
-            var order = await _context.Orders.FindAsync(id);
+            var order = await _service.GetById(id);
 
             if (order == null)
                 return BadRequest("Requested order was not found.");
 
-            var orderCreated = new OrderCreated(order);
-            return Ok(orderCreated);
+            return Ok(order);
         }
 
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] CreateOrder createOrder)
         {
-            var order = createOrder.MapToEntity();
-            _context.Orders.Add(order);
-            await _context.SaveChangesAsync();
-            var orderCreated = new OrderCreated(order);
-            return CreatedAtAction("Get", new {id = order.Id}, orderCreated);
+            var order = await _service.Create(createOrder);
+            return CreatedAtAction("Get", new {id = order.Id}, order);
         }
     }
 }
