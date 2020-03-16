@@ -4,5 +4,9 @@
         <TargetFramework>netcoreapp3.1</TargetFramework>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\OrdersNotifications.Library\OrdersNotifications.Library.csproj" />
+    </ItemGroup>
+
 
 </Project>
