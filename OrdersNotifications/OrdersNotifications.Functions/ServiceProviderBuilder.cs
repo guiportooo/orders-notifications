@@ -38,7 +38,6 @@ namespace OrdersNotifications.Functions
             services.Configure<NotificationsApiSettings>(options
                 => notificationsApi.Bind(options));
 
-            services.AddTransient<INotificationsService, NotificationsService>();
             return services.BuildServiceProvider();
         }
     }

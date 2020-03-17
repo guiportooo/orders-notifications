@@ -9,6 +9,11 @@ namespace OrdersNotifications.Api.Models
         public string Subject { get; set; }
         public string Body { get; set; }
 
+        public PendingNotification()
+        {
+            
+        }
+        
         public PendingNotification(Notification notification)
         {
             Id = notification.Id;

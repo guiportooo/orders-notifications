@@ -1,5 +1,6 @@
 using System;
 using Microsoft.Extensions.DependencyInjection;
+using OrdersNotifications.Library.Notifications;
 using OrdersNotifications.Library.Queues;
 using OrdersNotifications.Library.Queues.Handlers;
 
@@ -21,7 +22,9 @@ namespace OrdersNotifications.Library
             string notificationsApiHost)
         {
             services.AddAzureQueue(connectionString);
-            services.AddHttpClient<ISendEmailCommandHandler, SendEmailCommandHandler>(client 
+            services.AddHttpClient<ISendEmailCommandHandler, SendEmailCommandHandler>(client
+                => client.BaseAddress = new Uri(notificationsApiHost));
+            services.AddHttpClient<INotificationsService, NotificationsService>(client
                 => client.BaseAddress = new Uri(notificationsApiHost));
             return services;
         }

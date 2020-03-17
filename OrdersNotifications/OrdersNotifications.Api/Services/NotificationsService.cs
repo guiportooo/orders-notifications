@@ -11,6 +11,7 @@ namespace OrdersNotifications.Api.Services
     public interface INotificationsService
     {
         Task<IReadOnlyCollection<PendingNotification>> GetAllPending();
+        Task SendNotification(PendingNotification pendingNotification);
     }
 
     public class NotificationsService : INotificationsService
@@ -30,6 +31,22 @@ namespace OrdersNotifications.Api.Services
                 .Where(x => x.ShouldNotify(DateTime.Now))
                 .Select(x => new PendingNotification(x))
                 .ToList();
+        }
+
+        public async Task SendNotification(PendingNotification pendingNotification)
+        {
+            var notification = await _context.Notifications.FindAsync(pendingNotification.Id);
+
+            if (notification == null)
+                return;
+
+            var now = DateTime.Now;
+
+            if (!notification.ShouldNotify(now))
+                return;
+
+            notification.NotifiedAt = now;
+            await _context.SaveChangesAsync();
         }
     }
 }

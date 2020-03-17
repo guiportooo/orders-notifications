@@ -22,9 +22,10 @@ namespace OrdersNotifications.Api.Controllers
         }
         
         [HttpPost]
-        public IActionResult Send([FromBody] PendingNotification notification)
+        public async Task<IActionResult> Send([FromBody] PendingNotification notification)
         {
-            return Accepted();
+            await _service.SendNotification(notification);
+            return Ok();
         }
     }
 }
