@@ -24,23 +24,15 @@ namespace OrdersNotifications.Library.Queues
 
         public async Task SendAsync<T>(T obj) where T : BaseQueueMessage
         {
-            try
-            {
-                var queueReference = _cloudQueueClientFactory
-                    .GetClient()
-                    .GetQueueReference(obj.QueueName);
+            var queueReference = _cloudQueueClientFactory
+                .GetClient()
+                .GetQueueReference(obj.QueueName);
 
-                await queueReference.CreateIfNotExistsAsync();
+            await queueReference.CreateIfNotExistsAsync();
 
-                var message = JsonConvert.SerializeObject(obj);
-                var queueMessage = new CloudQueueMessage(message);
-                await queueReference.AddMessageAsync(queueMessage);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
+            var message = JsonConvert.SerializeObject(obj);
+            var queueMessage = new CloudQueueMessage(message);
+            await queueReference.AddMessageAsync(queueMessage);
         }
     }
 }

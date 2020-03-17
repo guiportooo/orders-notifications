@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
@@ -23,8 +24,8 @@ namespace OrdersNotifications.Library.Notifications
         private readonly NotificationsApiSettings _notificationsApiSettings;
 
         public NotificationsService(IQueueCommunicator queueCommunicator,
-            ISendEmailCommandHandler handler, 
-            HttpClient httpClient, 
+            ISendEmailCommandHandler handler,
+            HttpClient httpClient,
             IOptions<NotificationsApiSettings> notificationsApiSettings)
         {
             _queueCommunicator = queueCommunicator;
@@ -38,18 +39,16 @@ namespace OrdersNotifications.Library.Notifications
             var response = await _httpClient.GetAsync(_notificationsApiSettings.Path);
             response.EnsureSuccessStatusCode();
             var content = await response.Content.ReadAsStringAsync();
-            var notifications = JsonConvert
-                .DeserializeObject<IEnumerable<PendingNotification>>(content);
+            var notifications = JsonConvert.DeserializeObject<IEnumerable<PendingNotification>>(content);
 
-            foreach (var notification in notifications)
-            {
-                var command = new SendEmailCommand(notification.Id,
-                    notification.To,
-                    notification.Subject,
-                    notification.Body);
-                
+            var commands = notifications
+                .Select(x => new SendEmailCommand(x.Id,
+                    x.To,
+                    x.Subject,
+                    x.Body));
+
+            foreach (var command in commands)
                 await _queueCommunicator.SendAsync(command);
-            }
         }
 
         public async Task SendEmailAsync(string message)

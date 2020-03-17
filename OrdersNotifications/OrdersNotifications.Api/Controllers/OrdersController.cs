@@ -14,14 +14,14 @@ namespace OrdersNotifications.Api.Controllers
         public OrdersController(IOrdersService service) => _service = service;
 
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> GetAll()
         {
             var orders = await _service.GetAllOrders();
             return Ok(orders);
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int id)
+        public async Task<IActionResult> GetById(int id)
         {
             var order = await _service.GetById(id);
 
@@ -32,10 +32,10 @@ namespace OrdersNotifications.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] CreateOrder createOrder)
+        public async Task<IActionResult> Create([FromBody] CreateOrder createOrder)
         {
             var order = await _service.Create(createOrder);
-            return CreatedAtAction("Get", new {id = order.Id}, order);
+            return CreatedAtAction("GetById", new {id = order.Id}, order);
         }
     }
 }
