@@ -9,10 +9,12 @@ namespace OrdersNotifications.Library.Entities
         public string UserEmail { get; set; }
         public DateTime Date { get; set; }
         public List<Item> Items { get; set; }
+        public List<Notification> Notifications { get; set; }
 
         public Order()
         {
             Items = new List<Item>();
+            Notifications = new List<Notification>();
         }
     }
 }

@@ -10,6 +10,7 @@ namespace OrdersNotifications.Api.Models
         public int Id { get; }
         public DateTime Date { get; }
         public IEnumerable<OrderItem> Items { get; }
+        public IEnumerable<OrderNotification> Notifications { get; set; }
 
         public OrderCreated(Order order)
         {
@@ -24,6 +25,13 @@ namespace OrdersNotifications.Api.Models
                     {
                         ProductId = x.ProductId,
                         Quantity = x.Quantity
+                    });
+            Notifications = order.Notifications
+                .Select(x =>
+                    new OrderNotification
+                    {
+                        To = x.To,
+                        Notified = x.Notified
                     });
         }
     }

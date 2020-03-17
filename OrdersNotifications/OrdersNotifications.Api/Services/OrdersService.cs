@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -5,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using OrdersNotifications.Api.Models;
 using OrdersNotifications.Library;
+using OrdersNotifications.Library.Entities;
 using OrdersNotifications.Library.Queues;
 using OrdersNotifications.Library.Queues.Messages;
 
@@ -36,6 +38,7 @@ namespace OrdersNotifications.Api.Services
             => await _context
                 .Orders
                 .Include(x => x.Items)
+                .Include(x => x.Notifications)
                 .Select(x => new OrderCreated(x))
                 .ToListAsync();
 
@@ -48,24 +51,28 @@ namespace OrdersNotifications.Api.Services
         public async Task<OrderCreated> Create(CreateOrder createOrder)
         {
             var order = createOrder.MapToEntity();
+            order.Notifications = MapNotifications(order.Id, order.UserEmail);
             _context.Orders.Add(order);
             await _context.SaveChangesAsync();
-            await SendEmailsAsync(order.Id, order.UserEmail);
             return new OrderCreated(order);
         }
 
-        private async Task SendEmailsAsync(int orderId, string userEmail)
+        private List<Notification> MapNotifications(int orderId, string userEmail)
         {
-            var clientEmail = new SendEmailCommand(userEmail,
+            var clientNotification = new Notification(userEmail,
                 "Thank you!",
-                "Your order is being processed.");
+                "Your order is being processed.",
+                DateTime.Now);
 
-            var adminEmail = new SendEmailCommand(_emailSettings.AdminEmail,
+            var adminNotification = new Notification(_emailSettings.AdminEmail,
                 "Order created!",
-                $"New order with id {orderId} created by {userEmail}");
-
-            await _queueCommunicator.SendAsync(clientEmail);
-            await _queueCommunicator.SendAsync(adminEmail);
+                $"New order with id {orderId} created by {userEmail}",
+                DateTime.Now.AddMinutes(2));
+            
+            return new List<Notification>
+            {
+                clientNotification, adminNotification
+            };
         }
     }
 }
