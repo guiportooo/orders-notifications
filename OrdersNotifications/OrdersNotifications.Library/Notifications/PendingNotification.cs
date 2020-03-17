@@ -1,13 +1,15 @@
 namespace OrdersNotifications.Library.Notifications
 {
-    public class SendEmail
+    public class PendingNotification
     {
+        public int Id { get; set; }
         public string To { get; }
         public string Subject { get; }
         public string Body { get; }
 
-        public SendEmail(string to, string subject, string body)
+        public PendingNotification(int id, string to, string subject, string body)
         {
+            Id = id;
             To = to;
             Subject = subject;
             Body = body;

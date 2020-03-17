@@ -1,5 +1,4 @@
 using System;
-using System.Net.NetworkInformation;
 using Microsoft.Extensions.DependencyInjection;
 using OrdersNotifications.Library.Queues;
 using OrdersNotifications.Library.Queues.Handlers;

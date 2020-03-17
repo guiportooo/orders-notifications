@@ -9,7 +9,7 @@ using OrdersNotifications.Library;
 namespace OrdersNotifications.Library.Migrations
 {
     [DbContext(typeof(OrdersContext))]
-    [Migration("20200317152145_AddNotification")]
+    [Migration("20200317171953_AddNotification")]
     partial class AddNotification
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -71,7 +71,7 @@ namespace OrdersNotifications.Library.Migrations
 
                     b.HasIndex("OrderId");
 
-                    b.ToTable("Notification");
+                    b.ToTable("Notifications");
                 });
 
             modelBuilder.Entity("OrdersNotifications.Library.Entities.Order", b =>

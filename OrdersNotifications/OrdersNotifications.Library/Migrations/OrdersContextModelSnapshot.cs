@@ -69,7 +69,7 @@ namespace OrdersNotifications.Library.Migrations
 
                     b.HasIndex("OrderId");
 
-                    b.ToTable("Notification");
+                    b.ToTable("Notifications");
                 });
 
             modelBuilder.Entity("OrdersNotifications.Library.Entities.Order", b =>

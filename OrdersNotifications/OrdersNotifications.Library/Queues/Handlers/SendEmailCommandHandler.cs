@@ -27,11 +27,12 @@ namespace OrdersNotifications.Library.Queues.Handlers
 
         public async Task Handle(SendEmailCommand command)
         {
-            var sendEmail = new SendEmail(command.To,
+            var notification = new PendingNotification(command.Id,
+                command.To,
                 command.Subject,
                 command.Body);
 
-            var content = JsonConvert.SerializeObject(sendEmail);
+            var content = JsonConvert.SerializeObject(notification);
 
             await _httpClient.PostAsync(_notificationsApiSettings.Path, 
                 new StringContent(content, Encoding.UTF8, "application/json"));

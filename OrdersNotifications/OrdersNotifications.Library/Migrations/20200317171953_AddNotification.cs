@@ -8,7 +8,7 @@ namespace OrdersNotifications.Library.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Notification",
+                name: "Notifications",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -22,9 +22,9 @@ namespace OrdersNotifications.Library.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Notification", x => x.Id);
+                    table.PrimaryKey("PK_Notifications", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Notification_Orders_OrderId",
+                        name: "FK_Notifications_Orders_OrderId",
                         column: x => x.OrderId,
                         principalTable: "Orders",
                         principalColumn: "Id",
@@ -32,15 +32,15 @@ namespace OrdersNotifications.Library.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Notification_OrderId",
-                table: "Notification",
+                name: "IX_Notifications_OrderId",
+                table: "Notifications",
                 column: "OrderId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Notification");
+                name: "Notifications");
         }
     }
 }

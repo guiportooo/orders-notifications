@@ -8,7 +8,6 @@ using OrdersNotifications.Api.Models;
 using OrdersNotifications.Library;
 using OrdersNotifications.Library.Entities;
 using OrdersNotifications.Library.Queues;
-using OrdersNotifications.Library.Queues.Messages;
 
 namespace OrdersNotifications.Api.Services
 {

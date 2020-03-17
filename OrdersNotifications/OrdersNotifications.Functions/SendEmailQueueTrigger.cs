@@ -5,8 +5,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using OrdersNotifications.Library.Notifications;
 using OrdersNotifications.Library.Queues;
-using OrdersNotifications.Library.Queues.Handlers;
-using OrdersNotifications.Library.Queues.Messages;
 
 namespace OrdersNotifications.Functions
 {
