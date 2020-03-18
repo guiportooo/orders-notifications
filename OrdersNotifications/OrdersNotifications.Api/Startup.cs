@@ -26,7 +26,11 @@ namespace OrdersNotifications.Api
             services.AddControllers();
 
             services.AddDbContext<OrdersContext>(options 
-                => options.UseSqlite("DataSource=orders.db"));
+                => 
+            {
+                var dbPath = Path.Combine(Environment.CurrentDirectory, "orders.db");
+                options.UseSqlite($"DataSource={dbPath}");
+            });
             
             services.Configure<EmailSettings>(options => Configuration
                 .GetSection("EmailSettings")

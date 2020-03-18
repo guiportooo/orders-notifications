@@ -20,7 +20,10 @@ namespace OrdersNotifications.Library
         {
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder options) 
-            => options.UseSqlite("DataSource=orders.db");
+        protected override void OnConfiguring(DbContextOptionsBuilder options)
+        {
+            var dbPath = Path.Combine(Environment.CurrentDirectory, "orders.db");
+            options.UseSqlite($"DataSource={dbPath}");
+        }
     }
 }
