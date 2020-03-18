@@ -20,13 +20,7 @@ namespace OrdersNotifications.Library
         {
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder options)
-        {
-            var rootDirectory = $@"{Environment.GetFolderPath(
-                Environment.SpecialFolder.UserProfile,
-                Environment.SpecialFolderOption.DoNotVerify)}";
-            var connectionString = $"DataSource={Path.Combine(rootDirectory, "DBs", "orders.db")}";
-            options.UseSqlite(connectionString);
-        }
+        protected override void OnConfiguring(DbContextOptionsBuilder options) 
+            => options.UseSqlite("DataSource=orders.db");
     }
 }

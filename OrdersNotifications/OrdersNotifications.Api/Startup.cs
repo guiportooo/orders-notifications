@@ -25,14 +25,8 @@ namespace OrdersNotifications.Api
         {
             services.AddControllers();
 
-            services.AddDbContext<OrdersContext>(options => 
-            {
-                var rootDirectory = $@"{Environment.GetFolderPath(
-                    Environment.SpecialFolder.UserProfile,
-                    Environment.SpecialFolderOption.DoNotVerify)}";
-                var connectionString = $"DataSource={Path.Combine(rootDirectory, "DBs", "orders.db")}";
-                options.UseSqlite(connectionString);
-            });
+            services.AddDbContext<OrdersContext>(options 
+                => options.UseSqlite("DataSource=orders.db"));
             
             services.Configure<EmailSettings>(options => Configuration
                 .GetSection("EmailSettings")
@@ -59,6 +53,8 @@ namespace OrdersNotifications.Api
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+            
+            ordersContext.Database.Migrate();
         }
     }
 }
