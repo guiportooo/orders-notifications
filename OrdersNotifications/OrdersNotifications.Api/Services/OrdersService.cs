@@ -7,7 +7,6 @@ using Microsoft.Extensions.Options;
 using OrdersNotifications.Api.Models;
 using OrdersNotifications.Library;
 using OrdersNotifications.Library.Entities;
-using OrdersNotifications.Library.Queues;
 
 namespace OrdersNotifications.Api.Services
 {
@@ -21,15 +20,11 @@ namespace OrdersNotifications.Api.Services
     public class OrdersService : IOrdersService
     {
         private readonly OrdersContext _context;
-        private readonly IQueueCommunicator _queueCommunicator;
         private readonly EmailSettings _emailSettings;
 
-        public OrdersService(OrdersContext context,
-            IQueueCommunicator queueCommunicator,
-            IOptions<EmailSettings> emailSettings)
+        public OrdersService(OrdersContext context, IOptions<EmailSettings> emailSettings)
         {
             _context = context;
-            _queueCommunicator = queueCommunicator;
             _emailSettings = emailSettings.Value;
         }
 
