@@ -1,5 +1,7 @@
 # Orders Notifications
 
+[![Build Status](https://dev.azure.com/l3-guilhermeporto/Orders%20Notifications/_apis/build/status/orders-notifications-api?branchName=master)](https://dev.azure.com/l3-guilhermeporto/Orders%20Notifications/_build/latest?definitionId=13&branchName=master)
+
 A POC with Azure Functions simulating notifications being sent after new orders are created.
 
 ## Flow
