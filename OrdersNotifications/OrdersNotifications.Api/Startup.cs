@@ -25,24 +25,21 @@ namespace OrdersNotifications.Api
         {
             services.AddControllers();
 
-            services.AddDbContext<OrdersContext>(options 
-                => 
-            {
-                var dbPath = Path.Combine(Environment.CurrentDirectory, "orders.db");
-                options.UseSqlite($"DataSource={dbPath}");
-            });
-            
+            services.AddDbContext<OrdersContext>(options
+                => options.UseSqlServer(Configuration["ConnectionString"], 
+                        b => b.MigrationsAssembly("OrdersNotifications.Api")));
+
             services.Configure<EmailSettings>(options => Configuration
                 .GetSection("EmailSettings")
                 .Bind(options));
-            
+
             services.AddScoped<IOrdersService, OrdersService>();
             services.AddScoped<INotificationsService, NotificationsService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, 
-            IWebHostEnvironment env, 
+        public void Configure(IApplicationBuilder app,
+            IWebHostEnvironment env,
             OrdersContext ordersContext)
         {
             if (env.IsDevelopment())
@@ -57,7 +54,7 @@ namespace OrdersNotifications.Api
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
-            
+
             ordersContext.Database.Migrate();
         }
     }

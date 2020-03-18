@@ -1,5 +1,3 @@
-using System;
-using System.IO;
 using Microsoft.EntityFrameworkCore;
 using OrdersNotifications.Library.Entities;
 
@@ -18,12 +16,6 @@ namespace OrdersNotifications.Library
         public OrdersContext(DbContextOptions options)
             : base(options)
         {
-        }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder options)
-        {
-            var dbPath = Path.Combine(Environment.CurrentDirectory, "orders.db");
-            options.UseSqlite($"DataSource={dbPath}");
         }
     }
 }
