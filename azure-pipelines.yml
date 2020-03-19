@@ -1,18 +1,13 @@
-# ASP.NET Core
-# Build and test ASP.NET Core projects targeting .NET Core.
-# Add steps that run tests, create a NuGet package, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
-
 trigger:
 - master
 
 variables:
   buildConfiguration: 'Release'
 
-  # Agent VM image name
+  azureSubscription: 'Visual Studio Professional (7ed53679-1661-4c8b-b7b9-08b51fd7073f)'
+
   vmImageName: 'ubuntu-latest'
 
-  # Working Directory
   workingDirectory: '$(System.DefaultWorkingDirectory)/OrdersNotifications/OrdersNotifications.Api'
 
 stages:
@@ -24,7 +19,6 @@ stages:
     displayName: Build
     pool:
       vmImage: $(vmImageName)
-
 
     steps:
     - task: DotNetCoreCLI@2 
@@ -47,3 +41,38 @@ stages:
 
     - task: PublishBuildArtifacts@1
       displayName: 'publish artifacts'
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        ArtifactName: 'drop'
+        publishLocation: 'Container'
+
+
+- stage: Deploy
+  displayName: Deploy stage
+  dependsOn: Build
+  condition: succeeded()
+
+  jobs:
+  - job: Deploy
+    displayName: Deploy
+    pool:
+      vmImage: $(vmImageName)
+
+    steps:
+    - task: DownloadBuildArtifacts@0
+      displayName: 'download artifacts'
+      inputs:
+        buildType: 'current'
+        downloadType: 'specific'
+        downloadPath: '$(System.ArtifactsDirectory)'
+        artifactName: 'drop'
+
+    - task: AzureRmWebAppDeployment@4
+      displayName: 'api deploy'
+      inputs:
+        ConnectionType: 'AzureRM'
+        azureSubscription: '$(azureSubscription)'
+        appType: 'apiApp'
+        WebAppName: 'orders-notifications-api'
+        packageForLinux: '$(System.ArtifactsDirectory)/drop/*.zip'
+    
