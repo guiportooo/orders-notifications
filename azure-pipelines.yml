@@ -6,29 +6,44 @@
 trigger:
 - master
 
-pool:
-  vmImage: 'ubuntu-latest'
-
 variables:
   buildConfiguration: 'Release'
 
-steps:
-- task: DotNetCoreCLI@2 
-  displayName: 'dotnet build'
-  inputs:
-    command: build
-    projects: 'OrdersNotifications/OrdersNotifications.Api/OrdersNotifications.Api.csproj'
-    arguments: '--configuration $(buildConfiguration)'
+  # Agent VM image name
+  vmImageName: 'ubuntu-latest'
 
-- task: DotNetCoreCLI@2
-  displayName: 'dotnet publish'
-  inputs:
-    command: publish
-    publishWebProjects: false
-    projects: 'OrdersNotifications/OrdersNotifications.Api/OrdersNotifications.Api.csproj'
-    arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
-    zipAfterPublish: true
+  # Working Directory
+  workingDirectory: '$(System.DefaultWorkingDirectory)/OrdersNotifications/OrdersNotifications.Api'
 
-- task: PublishBuildArtifacts@1
-  displayName: 'publish artifacts'
+stages:
+- stage: Build
+  displayName: Build stage
 
+  jobs:
+  - job: Build
+    displayName: Build
+    pool:
+      vmImage: $(vmImageName)
+
+
+    steps:
+    - task: DotNetCoreCLI@2 
+      displayName: 'dotnet build'
+      inputs:
+        command: build
+        projects: |
+          $(workingDirectory)/*.csproj
+        arguments: '--configuration $(buildConfiguration)'
+
+    - task: DotNetCoreCLI@2
+      displayName: 'dotnet publish'
+      inputs:
+        command: publish
+        publishWebProjects: false
+        projects: |
+          $(workingDirectory)/*.csproj
+        arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+        zipAfterPublish: true
+
+    - task: PublishBuildArtifacts@1
+      displayName: 'publish artifacts'

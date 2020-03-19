@@ -8,7 +8,7 @@ trigger:
 
 variables:
   # Azure Resource Manager connection created during pipeline creation
-  azureSubscription: '8d24561e-40ef-4c1a-b2e6-cab293f5933d'
+  azureSubscription: '$(azureSubscription)'
 
   # Function app name
   functionAppName: 'orders-notifications-fn'
@@ -31,7 +31,7 @@ stages:
 
     steps:
     - task: DotNetCoreCLI@2
-      displayName: Build
+      displayName: 'dotnet build'
       inputs:
         command: 'build'
         projects: |
@@ -39,7 +39,7 @@ stages:
         arguments: --output $(System.DefaultWorkingDirectory)/publish_output --configuration Release
 
     - task: ArchiveFiles@2
-      displayName: 'Archive files'
+      displayName: 'archive files'
       inputs:
         rootFolderOrFile: '$(System.DefaultWorkingDirectory)/publish_output'
         includeRootFolder: false
@@ -68,7 +68,7 @@ stages:
 
           steps:
           - task: AzureFunctionApp@1
-            displayName: 'Azure functions app deploy'
+            displayName: 'azure functions app deploy'
             inputs:
               azureSubscription: '$(azureSubscription)'
               appType: functionApp
