@@ -1,4 +1,4 @@
-using OrdersNotifications.Library.Entities;
+using OrdersNotifications.Api.Entities;
 
 namespace OrdersNotifications.Api.Models
 {

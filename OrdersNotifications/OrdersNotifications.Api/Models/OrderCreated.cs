@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using OrdersNotifications.Library.Entities;
+using OrdersNotifications.Api.Entities;
 
 namespace OrdersNotifications.Api.Models
 {

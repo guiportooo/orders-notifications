@@ -1,4 +1,4 @@
-namespace OrdersNotifications.Library.Entities
+namespace OrdersNotifications.Api.Entities
 {
     public class Item
     {

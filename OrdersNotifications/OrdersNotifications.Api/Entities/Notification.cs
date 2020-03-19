@@ -1,6 +1,6 @@
 using System;
 
-namespace OrdersNotifications.Library.Entities
+namespace OrdersNotifications.Api.Entities
 {
     public class Notification
     {

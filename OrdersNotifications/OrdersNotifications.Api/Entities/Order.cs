@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace OrdersNotifications.Library.Entities
+namespace OrdersNotifications.Api.Entities
 {
     public class Order
     {

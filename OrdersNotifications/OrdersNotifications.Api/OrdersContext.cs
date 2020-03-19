@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using OrdersNotifications.Library.Entities;
+using OrdersNotifications.Api.Entities;
 
-namespace OrdersNotifications.Library
+namespace OrdersNotifications.Api
 {
     public class OrdersContext : DbContext
     {
